@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CarRentalSystem {
@@ -8,9 +9,15 @@ public class CarRentalSystem {
     private HashMap<String, String> rentedCars =
             new HashMap<String, String>(100, 0.5f);
     private HashMap<String, RentedCars> hash=new HashMap<String, RentedCars>(100,0.5f);
-    private static String getPlateNo() {
+    private static String getPlateNo() throws InputMismatchException{
         System.out.println("Introduceti numarul de inmatriculare:");
-        return sc.nextLine();
+        String inm;
+        try{
+            inm=sc.nextLine();
+        }catch (InputMismatchException e){
+            throw new InputMismatchException();
+        }
+        return inm;
     }
     private int getCarsNo(String ownerName){
         return this.hash.get(ownerName).getSize();
@@ -74,7 +81,12 @@ public class CarRentalSystem {
                     printCommandsList();
                     break;
                 case "add":
-                    rentCar(getPlateNo(), getOwnerName());
+                    try {
+                        rentCar(getPlateNo(), getOwnerName());
+                    }catch (InputMismatchException e){
+                        System.out.println("Acesta nu este un sir de caractere valid.");
+                        break;
+                    }
                     break;
                 case "check":
                     System.out.println(isCarRent(getPlateNo()));
